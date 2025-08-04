@@ -52,19 +52,22 @@ If you see "Server configuration error":
 ### Testing the API
 
 You can test if the API is working by visiting:
+- `https://your-domain.vercel.app/api/hello`
 - `https://your-domain.vercel.app/api/test`
 
-This should return a JSON response indicating the API is working.
+These should return JSON responses indicating the API is working.
 
 ## File Structure
 
 ```
 ├── api/
 │   ├── submit-form.js    # Main API endpoint
-│   └── test.js          # Test endpoint
-├── index.html           # Main form page
-├── script.js            # Frontend JavaScript
-├── style.css            # Styles
+│   ├── test.js          # Test endpoint
+│   └── hello.js         # Simple test endpoint
+├── public/
+│   ├── index.html       # Main form page
+│   ├── script.js        # Frontend JavaScript
+│   └── style.css        # Styles
 ├── vercel.json          # Vercel configuration
 └── package.json         # Dependencies
 ```
@@ -73,6 +76,7 @@ This should return a JSON response indicating the API is working.
 
 - `POST /api/submit-form` - Submit form data to Google Sheets
 - `GET /api/test` - Test endpoint to verify API is working
+- `GET /api/hello` - Simple test endpoint
 
 ## Form Fields
 
