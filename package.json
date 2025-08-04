@@ -1,0 +1,26 @@
+{
+  "name": "gsheet-form-api",
+  "version": "1.0.0",
+  "description": "Form submission to Google Sheets using Vercel",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "start": "vercel dev",
+    "serve": "npx http-server . -p 3000 -c-1"
+  },
+  "dependencies": {
+    "googleapis": "^128.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "keywords": [
+    "vercel",
+    "google-sheets",
+    "form",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
+} 
