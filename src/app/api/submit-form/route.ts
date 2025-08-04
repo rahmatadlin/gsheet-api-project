@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       range: 'Sheet1!A:E',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
-      resource: {
+      requestBody: {
         values: values,
       },
     });
