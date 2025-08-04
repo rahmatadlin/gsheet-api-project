@@ -7,6 +7,16 @@ const GOOGLE_SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
 export default async function handler(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -18,6 +28,15 @@ export default async function handler(req, res) {
         // Validate required fields
         if (!nama || !email || !pesan) {
             return res.status(400).json({ error: 'Nama, email, dan pesan harus diisi' });
+        }
+
+        // Check if environment variables are set
+        if (!SHEET_ID || !GOOGLE_SERVICE_ACCOUNT_EMAIL || !GOOGLE_PRIVATE_KEY) {
+            console.error('Environment variables not set properly');
+            return res.status(500).json({ 
+                error: 'Server configuration error. Please check environment variables.',
+                details: 'GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, and GOOGLE_PRIVATE_KEY must be set'
+            });
         }
 
         // Initialize Google Sheets API
@@ -45,7 +64,7 @@ export default async function handler(req, res) {
         // Append data to Google Sheets
         const response = await sheets.spreadsheets.values.append({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:E', // Adjust range as needed
+            range: 'Sheet1!A:E',
             valueInputOption: 'USER_ENTERED',
             insertDataOption: 'INSERT_ROWS',
             resource: {
