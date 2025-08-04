@@ -1,28 +1,28 @@
 {
-  "name": "gsheet-form-api",
-  "version": "1.0.0",
-  "description": "Form submission to Google Sheets using Vercel",
-  "main": "index.js",
+  "name": "gsheet-api-project",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js",
-    "build": "echo 'No build step required'",
-    "vercel-build": "echo 'Build completed'"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "googleapis": "^128.0.0"
+    "googleapis": "^154.1.0",
+    "next": "15.4.5",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "express": "^4.18.2",
-    "dotenv": "^16.3.1",
-    "http-server": "^14.1.1"
-  },
-  "keywords": [
-    "vercel",
-    "google-sheets",
-    "form",
-    "api"
-  ],
-  "author": "",
-  "license": "MIT"
-} 
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
