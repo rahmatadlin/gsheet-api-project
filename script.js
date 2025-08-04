@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
+            console.log('Sending data to:', apiUrl);
+            console.log('Data:', data);
+            
             // Send data to Google Sheets
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -37,13 +40,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(data)
             });
 
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
             // Check if response is ok
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorMessage;
+                } catch (parseError) {
+                    console.log('Could not parse error response as JSON');
+                    const textResponse = await response.text();
+                    console.log('Text response:', textResponse);
+                    errorMessage = `Server error: ${response.status} - ${textResponse.substring(0, 100)}`;
+                }
+                
+                throw new Error(errorMessage);
             }
 
             const result = await response.json();
+            console.log('Success response:', result);
 
             if (result.success) {
                 showMessage('Pesan berhasil dikirim! Data telah tersimpan di Google Sheets.', 'success');
@@ -55,7 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             
             // Handle different error scenarios
-            if (error.message.includes('Server configuration error')) {
+            if (error.message.includes('404')) {
+                showMessage('API endpoint tidak ditemukan. Pastikan deploy sudah berhasil dan environment variables sudah diset.', 'error');
+            } else if (error.message.includes('Server configuration error')) {
                 showMessage('Server belum dikonfigurasi dengan benar. Pastikan environment variables sudah diset di Vercel.', 'error');
             } else if (error.message.includes('Failed to fetch')) {
                 showMessage('Tidak dapat terhubung ke server. Cek koneksi internet Anda.', 'error');

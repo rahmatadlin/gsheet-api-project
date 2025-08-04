@@ -1,153 +1,92 @@
-# Form Contact dengan Google Sheets Database
+# Google Sheets Form API
 
-Project ini adalah form contact sederhana yang menggunakan Google Sheets sebagai database. Form akan di-deploy di Vercel dan data yang di-submit akan otomatis tersimpan di Google Sheets.
+Form submission to Google Sheets using Vercel serverless functions.
 
-## 🚀 Fitur
+## Setup Instructions
 
-- ✅ Form contact yang responsif dan modern
-- ✅ Validasi form real-time
-- ✅ Integrasi dengan Google Sheets API
-- ✅ Deploy otomatis di Vercel
-- ✅ Loading state dan feedback user
-- ✅ Design yang beautiful dan user-friendly
+### 1. Google Sheets Setup
 
-## 📋 Prerequisites
+1. Create a new Google Sheet
+2. Go to Google Cloud Console (https://console.cloud.google.com/)
+3. Create a new project or select existing one
+4. Enable Google Sheets API
+5. Create a Service Account
+6. Download the JSON key file
+7. Share your Google Sheet with the service account email
 
-Sebelum menjalankan project ini, Anda perlu:
+### 2. Environment Variables
 
-1. **Google Cloud Console Account**
-2. **Google Sheets** (untuk menyimpan data)
-3. **Vercel Account** (untuk deployment)
-4. **Node.js** (untuk development lokal)
+Set these environment variables in your Vercel project:
 
-## 🛠️ Setup Google Sheets API
+- `GOOGLE_SHEET_ID`: Your Google Sheet ID (from the URL)
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`: Service account email from JSON key
+- `GOOGLE_PRIVATE_KEY`: Private key from JSON key (include the full key with quotes)
 
-### 1. Buat Google Cloud Project
+### 3. Deploy to Vercel
 
-1. Buka [Google Cloud Console](https://console.cloud.google.com/)
-2. Buat project baru atau pilih project yang sudah ada
-3. Enable Google Sheets API:
-   - Buka "APIs & Services" > "Library"
-   - Cari "Google Sheets API"
-   - Klik "Enable"
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Set the environment variables in Vercel dashboard
+4. Deploy
 
-### 2. Buat Service Account
+## Troubleshooting
 
-1. Buka "APIs & Services" > "Credentials"
-2. Klik "Create Credentials" > "Service Account"
-3. Isi nama service account (misal: "form-submission")
-4. Klik "Create and Continue"
-5. Skip role assignment, klik "Continue"
-6. Klik "Done"
+### 404 Error
+If you get a 404 error when submitting the form:
 
-### 3. Generate JSON Key
+1. Check that your API route is properly deployed
+2. Verify environment variables are set in Vercel
+3. Test the API endpoint: `https://your-domain.vercel.app/api/test`
 
-1. Klik service account yang baru dibuat
-2. Buka tab "Keys"
-3. Klik "Add Key" > "Create new key"
-4. Pilih "JSON"
-5. Download file JSON
+### Environment Variables Not Set
+If you see "Server configuration error":
 
-### 4. Setup Google Sheets
-
-1. Buat Google Sheets baru
-2. Share sheet dengan email service account (dari file JSON)
-3. Berikan permission "Editor"
-4. Copy Sheet ID dari URL (bagian antara /d/ dan /edit)
-
-## 🔧 Setup Environment Variables
-
-Buat file `.env.local` di root project:
-
-```env
-GOOGLE_SHEET_ID=your_sheet_id_here
-GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account_email@project.iam.gserviceaccount.com
-GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour private key here\n-----END PRIVATE KEY-----\n"
-```
-
-## 📦 Install Dependencies
-
-```bash
-npm install
-```
-
-## 🚀 Development
-
-```bash
-npm run dev
-```
-
-## 🌐 Deploy ke Vercel
-
-### 1. Push ke GitHub
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/username/repo-name.git
-git push -u origin main
-```
-
-### 2. Deploy di Vercel
-
-1. Buka [Vercel](https://vercel.com)
-2. Import project dari GitHub
-3. Tambahkan Environment Variables di Vercel dashboard:
+1. Go to Vercel dashboard
+2. Navigate to your project settings
+3. Go to Environment Variables section
+4. Add the required variables:
    - `GOOGLE_SHEET_ID`
    - `GOOGLE_SERVICE_ACCOUNT_EMAIL`
    - `GOOGLE_PRIVATE_KEY`
-4. Deploy!
 
-## 📊 Struktur Google Sheets
+### Testing the API
 
-Sheet akan otomatis terisi dengan kolom:
-- A: Nama
-- B: Email
-- C: Telepon
-- D: Pesan
-- E: Timestamp
+You can test if the API is working by visiting:
+- `https://your-domain.vercel.app/api/test`
 
-## 🔧 Customization
+This should return a JSON response indicating the API is working.
 
-### Mengubah Field Form
+## File Structure
 
-Edit file `index.html` untuk menambah/mengurangi field:
-
-```html
-<div class="form-group">
-    <label for="field_name">Label Field</label>
-    <input type="text" id="field_name" name="field_name">
-</div>
+```
+├── api/
+│   ├── submit-form.js    # Main API endpoint
+│   └── test.js          # Test endpoint
+├── index.html           # Main form page
+├── script.js            # Frontend JavaScript
+├── style.css            # Styles
+├── vercel.json          # Vercel configuration
+└── package.json         # Dependencies
 ```
 
-### Mengubah Styling
+## API Endpoints
 
-Edit file `style.css` untuk mengubah tampilan form.
+- `POST /api/submit-form` - Submit form data to Google Sheets
+- `GET /api/test` - Test endpoint to verify API is working
 
-### Mengubah API Response
+## Form Fields
 
-Edit file `api/submit-form.js` untuk mengubah logika backend.
+The form expects these fields:
+- `nama` (required) - Name
+- `email` (required) - Email address
+- `telepon` (optional) - Phone number
+- `pesan` (required) - Message
 
-## 🐛 Troubleshooting
+## Google Sheets Format
 
-### Error "Invalid Credentials"
-- Pastikan service account email dan private key benar
-- Pastikan Google Sheets API sudah di-enable
-
-### Error "Permission Denied"
-- Pastikan service account sudah di-share dengan Google Sheets
-- Berikan permission "Editor"
-
-### Form tidak ter-submit
-- Cek browser console untuk error
-- Pastikan environment variables sudah benar di Vercel
-
-## 📝 License
-
-MIT License
-
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Data will be appended to Sheet1 with columns:
+A: Name
+B: Email
+C: Phone
+D: Message
+E: Timestamp
