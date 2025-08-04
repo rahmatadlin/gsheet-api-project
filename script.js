@@ -5,9 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnLoading = submitBtn.querySelector('.btn-loading');
     const messageDiv = document.getElementById('message');
 
-    // Determine API URL based on environment
-    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const apiUrl = isDevelopment ? 'http://localhost:3000/api/submit-form' : '/api/submit-form';
+    // API URL - akan bekerja di Vercel
+    const apiUrl = '/api/submit-form';
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -40,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Check if response is ok
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             
             // Handle different error scenarios
-            if (error.message.includes('405')) {
-                showMessage('API endpoint tidak tersedia. Pastikan server berjalan dengan benar.', 'error');
+            if (error.message.includes('Server configuration error')) {
+                showMessage('Server belum dikonfigurasi dengan benar. Pastikan environment variables sudah diset di Vercel.', 'error');
             } else if (error.message.includes('Failed to fetch')) {
                 showMessage('Tidak dapat terhubung ke server. Cek koneksi internet Anda.', 'error');
             } else {
-                showMessage('Gagal mengirim pesan. Silakan coba lagi.', 'error');
+                showMessage(error.message || 'Gagal mengirim pesan. Silakan coba lagi.', 'error');
             }
         } finally {
             // Reset button state
